@@ -1,0 +1,47 @@
+{% layout "layouts/base.liquid" %}
+{% block head %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+<ul class="album-list">
+  
+
+ {% for track in data.tracks.items %}
+    <li class="cover" id="{{ track.id }}">
+        <button class="trigger" data-open="{{ track.id  }}">
+            <img src="{{ track.album.images[0].url }}" alt="Album cover">
+        </button>
+    
+        <article class="cover-content" >
+            <div class="album-info">
+                <h3>{{ track.album.name }}</h3>
+                <p>Artiest(en): 
+                    {% for artist in track.artists %}
+                    {{ artist.name }}
+                    {% if not loop.last %}
+                            {% if not forloop.last %},{% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </p>
+                <p>In de spotlight: {{ track.name }}</p>
+                <p>Jaar: {{ track.album.release_date }}</p>
+                <p>Bekendheid: {{ track.popularity }}</p>
+                {% if track.preview_url %}
+                    <audio aria-hidden="true" controls tabindex="-1" id="{{ track.uri }}" src="{{ track.preview_url }}" ></audio>
+                {% endif %}
+                </div>
+                
+            <div class="record" data-spin=" {{ track.uri }}">
+                <img src="{{ track.album.images[0].url }}" alt="Nummer: {{ track.name }}">
+                {% if track.preview_url %}
+                    <button class="play" data-play="{{ track.uri }}"></button>
+                {% endif %}
+            </div>
+        </article>
+    </li>
+    {% endfor %} 
+</ul>
+
+
+{% endblock %}

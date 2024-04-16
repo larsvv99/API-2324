@@ -10,12 +10,26 @@
     "sourceType": "module"
   },
   "rules": {
-    "semi": ["warn", "always"],
-    "quotes": ["warn", "single"],
-    "space-before-function-paren": ["warn", "always"],
+    "semi": [
+      "warn",
+      "always"
+    ],
+    "quotes": [
+      "warn",
+      "single"
+    ],
+    // "space-before-function-paren": ["warn", "always"],
     "no-console": "off",
-    "object-curly-spacing": ["warn", "always"],
-    "no-unused-vars": ["warn", { "args": "none" }],
+    "object-curly-spacing": [
+      "warn",
+      "always"
+    ],
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "none"
+      }
+    ],
     "no-debugger": "off"
   }
 }
