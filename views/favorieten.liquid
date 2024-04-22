@@ -1,0 +1,21 @@
+{% layout "layouts/base.liquid" %}
+{% block head %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+    <ul id="favoriet">
+        {% for album in data.albums %}            
+        <li>
+            <div class="favoriet-info">
+                <h2>{{ album.name }}</h2>
+                <button class="delete-button" data-album-id="{{ album.id }}"></button>
+
+            </div>
+            <img src="{{ album.images[0].url }}" alt="Album cover">
+
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

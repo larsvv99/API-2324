@@ -4,6 +4,9 @@ import { logger } from '@tinyhttp/logger';
 import { Liquid } from 'liquidjs';
 import sirv from 'sirv';
 import { URLSearchParams } from 'url'; // Import URLSearchParams
+// import { Console } from 'console';
+import cookieParser from 'cookie-parser';
+
 let accessToken = null;
 
 const engine = new Liquid({
@@ -15,6 +18,7 @@ const app = new App();
 app
   .use(logger())
   .use('/', sirv('src'))
+  .use(cookieParser())
   .listen(3000);
 
 
@@ -45,14 +49,14 @@ const getAccessToken = async () => {
     return data.access_token;
   } catch (error) {
     console.error('Error fetching access token:', error);
-    throw error; // Rethrow the error for the caller to handle
+    throw error;
   }
 };
 
-const getGenres = async () => {
-  const url = 'https://api.spotify.com/v1/browse/categories?locale=sv_US';
-  return getData(url);
-};
+// const getGenres = async () => {
+//   const url = 'https://api.spotify.com/v1/browse/categories?locale=sv_US';
+//   return getData(url);
+// };
 
 
 // const albumIds = [
@@ -109,23 +113,21 @@ const getGenres = async () => {
 // };
 
 // Functie om een willekeurige letter te genereren
-const getRandomLetter = () => {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-  return alphabet[Math.floor(Math.random() * alphabet.length)];
+const willekeurigeLetter = () => {
+  const alfabet = 'abcdefghijklmnopqrstuvwxyz';
+  return alfabet[Math.floor(Math.random() * alfabet.length)];
 };
-
 
 
 const getAlbums = async () => {
-  // Genereren van een willekeurige letter voor de 'a'
-  const randomA = getRandomLetter();
-  // Genereren van een willekeurige offset tussen 0 en 1000
-  const randomOffset = Math.floor(Math.random() * 1001);
+  // Willekeurige letter
+  const letter = willekeurigeLetter();
+  // Willekeurige getal tussen 0 en 1000
+  const offset = Math.floor(Math.random() * 1001);
 
-  const url = `https://api.spotify.com/v1/search?q=${randomA}&type=track&limit=20&offset=${randomOffset}`;
+  const url = `https://api.spotify.com/v1/search?q=${letter}&type=track&limit=20&offset=${offset}`;
   return getData(url);
 };
-
 
 
 async function getData(url) {
@@ -152,15 +154,45 @@ async function getData(url) {
 }
 
 
+
+
+
 app.get('/', async (req, res) => {
   const data = await getAlbums();
-
-  // console.log('data', data.tracks.items);
+  console.log('data', data.tracks.items);
 
   return res.send(renderTemplate('views/index.liquid', { title: 'Hidden💎Gems', data: data }));
-  // return res.send(renderTemplate('views/index.liquid', { title: 'Hidden Gems' }));
-
 });
+
+
+app.get('/favorieten', async (req, res) => {
+  const cookies = req.cookies;
+  const favorieteAlbums = Object.keys(cookies)
+    .filter(cookieName => cookieName.startsWith('favoriteAlbum_') && cookies[cookieName] === 'true')
+    .map(cookieName => cookieName.split('_')[1]);
+
+  const albumIds = favorieteAlbums.join(',');
+  const url = `https://api.spotify.com/v1/albums?ids=${albumIds}`;
+
+  getData(url)
+    .then(data => {
+      console.log(data.albums);
+      res.send(renderTemplate('views/favorieten.liquid', { data: data, title: 'Favorieten' }));
+    })
+    .catch(error => {
+      console.error('Error fetching favorite albums:', error);
+      res.status(500).send('Er is een fout opgetreden bij het ophalen van de favoriete albums');
+    });
+});
+
+app.get('/refresh-data', async (req, res) => {
+  const data = await getAlbums();
+  res.json(data);
+});
+
+
+
+
 
 
 const renderTemplate = (template, data) => {

@@ -9,8 +9,38 @@
 
 body {
   background-color: var(--primary-color);
-  color: var(--quaternary-color);
+  color: var(--font-color);
+  font-family: var(--main-font);
   margin: 0;
+  transition: ease-out 300ms;
+}
+
+ul {
+  padding-inline-start: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+.disco {
+  background: linear-gradient(317deg in oklch, #2b2d42, #8d99ae, #d80032);
+  background-size: 600% 600%;
+  animation: Disco 2s ease infinite;
+}
+
+@keyframes Disco {
+  0% {
+    background-position: 0% 97%
+  }
+
+  50% {
+    background-position: 100% 4%
+  }
+
+  100% {
+    background-position: 0% 97%
+  }
 }
 
 .grid {
@@ -31,25 +61,52 @@ h1 {
 header {
   background-color: var(--secondary-color);
   color: #fff;
-  padding: 1rem;
+  padding: 1rem 5rem;
   height: 4rem;
   text-align: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
-main {
-  padding: 1rem;
+#Hidden💎Gems img {
+  display: none;
 }
 
+header a:hover {
+  transform: scale(1.2);
+}
 
+a {
+  transition: 200ms;
+}
 
 main {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
+}
+
+#refreshButton {
+  margin: 5rem;
+  position: fixed;
+  left: -1rem;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  background-color: transparent;
+  border: none;
+  background-image: url('images/refresh.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 200ms;
+  z-index: 5;
+}
+
+#refreshButton:hover {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 
@@ -65,19 +122,19 @@ main {
 
 
 .cover {
-  --record-size: 15rem;
+  --record-size: 14rem;
   --record-image: 5rem;
   position: relative;
   margin: 0;
   padding: 0;
-  list-style-type: none;
-  transform: translateX(20%);
+  /* transform: translateX(20%); */
 
 
   &.is-active {
     .trigger {
       transform: translate(-10%, -5%) rotate(5deg);
       box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+      margin-bottom: 17rem;
     }
 
     .record {
@@ -85,7 +142,7 @@ main {
     }
 
     .album-info {
-      transform: translateX(-10%);
+      transform: translateX(100%) translateY(14rem);
       opacity: 1;
     }
 
@@ -96,11 +153,23 @@ main {
   }
 }
 
+
 @media screen and (min-width: 1000px) {
   .cover {
     transform: translateX(10%);
     --record-size: 20rem;
     --record-image: 7rem;
+
+    &.is-active {
+      .trigger {
+        margin: 0;
+      }
+
+      .album-info {
+        transform: translateX(-10%);
+        opacity: 1;
+      }
+    }
   }
 }
 
@@ -233,11 +302,12 @@ audio {
   display: none;
   opacity: 0;
   top: 50%;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));
 }
 
 
 .spin {
-  animation: spin 1s linear infinite;
+  animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
@@ -248,4 +318,123 @@ audio {
   100% {
     transform: translateX(70%) rotate(360deg);
   }
+}
+
+.favorite-button {
+  background: transparent;
+  border: none;
+}
+
+.favorite-button:hover {
+  animation: hart 1s infinite;
+  transition: 200ms;
+}
+
+.favorite-button:hover path:nth-of-type(1) {
+  fill: var(--tertiary-color);
+
+}
+
+.favorite-button.is-favorite path:nth-of-type(1) {
+  fill: var(--tertiary-color);
+}
+
+@keyframes hart {
+  0% {
+    rotate: -3deg;
+    transform: scale(1.2);
+  }
+
+
+  50% {
+    rotate: 3deg;
+  }
+
+  100% {
+    rotate: -3deg;
+    transform: scale(1.2);
+  }
+}
+
+
+svg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+}
+
+path {
+  transition: 200ms;
+}
+
+
+
+/**************/
+/* Favorieten */
+/**************/
+#favoriet {
+  font-family: var(--main-font);
+  color: var(--font-color);
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#favoriet li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  gap: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  transition: 200ms;
+  width: 24rem;
+  height: 24rem;
+}
+
+.favoriet-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+#favoriet img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  border: var(--font-color) 10px solid;
+}
+
+.delete-button {
+  background: transparent;
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  background-image: url('images/close.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 200ms;
+  cursor: pointer;
+  position: absolute;
+  top: 1.5rem;
+  right: 0.5rem;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
 }
